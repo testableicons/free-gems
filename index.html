@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Free Gems Generator</title>
+  <!-- Poppins font -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* === Scoped widget styles === */
+    #gem-widget {
+      position: relative;
+      max-width: 480px;
+      margin: 40px auto;
+      padding: 40px 20px;
+      font-family: 'Poppins', sans-serif;
+      overflow: visible;
+      color: #fff;
+    }
+    /* Parallax gem background */
+    #gem-widget .parallax {
+      position: absolute;
+      inset: 0;
+      background: url('https://i.imgur.com/qjX1LqM.png') repeat;
+      background-size: cover;
+      animation: drift 60s linear infinite;
+      z-index: -1;
+      opacity: 0.6;
+    }
+    @keyframes drift {
+      from { background-position: 0 0; }
+      to   { background-position: 0 2000px; }
+    }
+    /* Landing panel */
+    #gem-widget .panel {
+      position: relative;
+      background: rgba(0,0,0,0.7);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    }
+    #gem-widget h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(90deg,#6b00ff,#00d4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+    /* Slider row */
+    #gem-widget .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    #gem-widget input[type=range] {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(90deg,#6b00ff,#00d4ff);
+      outline: none;
+    }
+    #gem-widget input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid #6b00ff;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(0,0,0,0.5);
+    }
+    #gem-widget input[type=number] {
+      width: 80px;
+      padding: 0.5rem;
+      border: none;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 1rem;
+    }
+    /* Text input + button */
+    #gem-widget input[type=text] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid transparent;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    #gem-widget input.error {
+      border-color: #ff6b6b;
+    }
+    #gem-widget .btn {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(45deg,#00d4ff,#6b00ff);
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(0,212,255,0.7);
+      transition: transform .2s, box-shadow .2s;
+      margin-top: 0.5rem;
+    }
+    #gem-widget .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0,212,255,1);
+    }
+    #gem-widget .microcopy {
+      font-size: .85rem;
+      color: #ddd;
+      margin-top: .5rem;
+    }
+    #gem-widget .footer {
+      font-size: .75rem;
+      color: #ccc;
+      margin-top: 1rem;
+    }
+    /* Overlay & sub‐screens */
+    #gem-widget .overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 10;
+    }
+    #gem-widget .screen {
+      display: none;
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      background: #111;
+      border-radius: 12px;
+      padding: 2rem;
+      width: 90%; max-width: 400px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.8);
+      text-align: center;
+      z-index: 11;
+    }
+    #gem-widget .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+      text-align: left;
+      color: #ddd;
+    }
+    #gem-widget .checklist li {
+      opacity: 0;
+      display: flex;
+      align-items: center;
+      margin-bottom: .75rem;
+    }
+    #gem-widget .checklist li.done {
+      opacity: 1;
+      transition: opacity .4s;
+      color: #6bff8c;
+    }
+    #gem-widget .checklist li strong {
+      color: #6bff8c;
+      margin-right: .5rem;
+    }
+    #gem-widget .label {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    #gem-widget .progress-bar {
+      width: 100%; height: 12px;
+      background: #333;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    #gem-widget .fill {
+      height: 100%; width: 0;
+      background: linear-gradient(90deg,#6b00ff,#00d4ff);
+    }
+    /* Rickroll screen */
+    #gem-widget #rickroll h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #ffed00;
+      text-shadow: 2px 2px #000;
+      margin-bottom: 1rem;
+    }
+    #gem-widget #rickroll iframe {
+      width: 100%; height: 225px;
+      border: none; border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    #gem-widget #rickroll p {
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body style="background: linear-gradient(135deg, #20002c, #6b00ff); margin:0;">
+
+  <div id="gem-widget">
+    <!-- Parallax background layer -->
+    <div class="parallax"></div>
+
+    <!-- Landing panel -->
+    <div class="panel" id="landing">
+      <h1>Unlimited Free Gems—No Surveys!</h1>
+      <div class="slider-container">
+        <input type="range" id="gemRange" min="500" max="10000" step="500" value="1000">
+        <input type="number" id="gemInput" min="500" max="10000" step="500" value="1000">
+      </div>
+      <input type="text" id="username" placeholder="e.g. KingDavid123">
+      <button class="btn" id="generateBtn">Generate My Gems!</button>
+      <div class="microcopy">No surveys, no human verification—just pure fun!</div>
+      <div class="footer">🔒 SSL Secure • Encrypted Connection</div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Confirmation modal -->
+    <div class="screen" id="modal">
+      <h2>Preparing Your Gems…</h2>
+      <ul class="checklist">
+        <li id="step1"><strong>✔</strong> Verifying game server connection</li>
+        <li id="step2"><strong>✔</strong> Allocating virtual gems</li>
+        <li id="step3"><strong>✔</strong> Finalizing injection protocol</li>
+      </ul>
+      <div id="cancel" style="color:#888;cursor:pointer;font-size:.9rem;">Oops, take me back</div>
+    </div>
+
+    <!-- Progress screen -->
+    <div class="screen" id="progress">
+      <div class="label" id="progressLabel">Injecting Gems… 0%</div>
+      <div class="progress-bar"><div class="fill" id="progressBar"></div></div>
+      <img src="https://i.imgur.com/Aj4YFZ5.png" alt="Archer nodding"
+           style="width:60px;position:absolute;bottom:20px;right:20px;">
+      <div class="microcopy">Need more time? Tap the gem icon!</div>
+    </div>
+
+    <!-- Rickroll screen -->
+    <div class="screen" id="rickroll">
+      <h1>Oops… Looks like you’ve been Rickrolled!</h1>
+      <iframe
+        src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1"
+        allow="autoplay; encrypted-media"
+        allowfullscreen>
+      </iframe>
+      <p>But hey, at least you had fun. Want to try again?</p>
+      <button class="btn" id="tryAgain">Try Again</button>
+      <button class="btn" id="shareFun">Share the Fun</button>
+    </div>
+  </div>
+
+  <script>
+    // Sync slider + number input
+    const range = document.getElementById('gemRange'),
+          input = document.getElementById('gemInput');
+    range.oninput = () => input.value = range.value;
+    input.oninput = () => range.value = input.value;
+
+    // Core elements
+    const landing = document.getElementById('landing'),
+          overlay = document.getElementById('overlay'),
+          modal   = document.getElementById('modal'),
+          progress= document.getElementById('progress'),
+          rick    = document.getElementById('rickroll'),
+          genBtn  = document.getElementById('generateBtn'),
+          cancel  = document.getElementById('cancel');
+
+    genBtn.onclick = () => {
+      const user = document.getElementById('username');
+      if (!user.value.trim()) {
+        user.classList.add('error');
+        return;
+      }
+      landing.style.display = 'none';
+      overlay.style.display = 'block';
+      modal.style.display   = 'block';
+      runChecklist();
+    };
+
+    cancel.onclick = () => {
+      overlay.style.display = 'none';
+      modal.style.display   = 'none';
+      landing.style.display = 'block';
+      document.getElementById('username').classList.remove('error');
+    };
+
+    function runChecklist() {
+      const steps = ['step1','step2','step3'];
+      let delay = 0;
+      steps.forEach((id,i) => {
+        delay += (i===2 ? 2000 : 1000);
+        setTimeout(() => document.getElementById(id).classList.add('done'), delay);
+      });
+      setTimeout(showProgress, delay + 500);
+    }
+
+    function showProgress() {
+      modal.style.display    = 'none';
+      progress.style.display = 'block';
+      let pct = 0;
+      const iv = setInterval(() => {
+        pct++;
+        document.getElementById('progressBar').style.width = pct + '%';
+        document.getElementById('progressLabel').textContent = `Injecting Gems… ${pct}%`;
+        if (pct >= 100) {
+          clearInterval(iv);
+          setTimeout(showRickroll, 300);
+        }
+      }, 100);
+    }
+
+    function showRickroll() {
+      progress.style.display = 'none';
+      overlay.style.display  = 'none';
+      rick.style.display     = 'block';
+    }
+
+    document.getElementById('tryAgain').onclick = () => location.reload();
+    document.getElementById('shareFun').onclick = () => {
+      window.open(
+        'https://twitter.com/intent/tweet?text=' +
+        encodeURIComponent('I tried to get free gems, got Rickrolled instead! 😂'),
+        '_blank'
+      );
+    };
+
+    // Konami code Easter egg
+    const combo = [38,38,40,40,37,39,37,39,66,65];
+    let idx = 0;
+    window.onkeydown = e => {
+      if (e.keyCode === combo[idx]) idx++;
+      else idx = 0;
+      if (idx === combo.length) {
+        alert('🎉 Treasure chest overflowing with gems!');
+        setTimeout(showRickroll, 1000);
+        idx = 0;
+      }
+    };
+
+    console.log('Nice try, champ. 🎸');
+  </script>
+</body>
+</html>
